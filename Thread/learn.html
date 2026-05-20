@@ -1,0 +1,2599 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Finn And Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f1419;
+  --bg-2: #161b22;
+  --surface: #1c2128;
+  --surface-2: #22272e;
+  --border: #30363d;
+  --border-strong: #444c56;
+  --text: #e6edf3;
+  --text-dim: #8b949e;
+  --text-muted: #6e7681;
+  --accent: #2ee7c1;
+  --accent-2: #14b8a6;
+  --accent-dim: rgba(46, 231, 193, 0.15);
+  --warn: #f59e0b;
+  --warn-dim: rgba(245, 158, 11, 0.15);
+  --error: #f87171;
+  --error-dim: rgba(248, 113, 113, 0.15);
+  --success: #4ade80;
+  --success-dim: rgba(74, 222, 128, 0.15);
+}
+
+body {
+  font-family: 'Inter', -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(at 20% 0%, rgba(46, 231, 193, 0.08) 0px, transparent 50%),
+    radial-gradient(at 80% 100%, rgba(99, 102, 241, 0.08) 0px, transparent 50%);
+  min-height: 100vh;
+  color: var(--text);
+  padding: 40px 20px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+/* ====== Header ====== */
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, var(--accent) 0%, #6366f1 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: var(--bg);
+  font-size: 18px;
+  box-shadow: 0 4px 20px rgba(46, 231, 193, 0.25);
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+.brand-name {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.brand-name span { color: var(--accent); }
+.brand-tag {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.streak-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  transition: all 0.2s;
+}
+.streak-pill.active {
+  border-color: var(--warn);
+  color: var(--warn);
+  background: var(--warn-dim);
+}
+
+/* ====== Mode tabs ====== */
+.mode-bar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 6px;
+  margin-bottom: 28px;
+}
+.mode-tab {
+  padding: 12px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.15s;
+  user-select: none;
+}
+.mode-tab:hover { color: var(--text); }
+.mode-tab.active {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 2px 10px rgba(46, 231, 193, 0.25);
+}
+
+/* ====== Topic chips ====== */
+.topic-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.topic-chip {
+  padding: 6px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.topic-chip:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+.topic-chip.active {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ====== Stats ====== */
+.stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.stats b { color: var(--text); font-weight: 600; }
+.progress-track {
+  height: 6px;
+  background: var(--surface-2);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #6366f1);
+  border-radius: 999px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ====== Card ====== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 32px;
+  margin-bottom: 18px;
+}
+.q-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.q-text {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+/* ====== Code block ====== */
+.code {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  font-family: 'JetBrains Mono', "Consolas", monospace;
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--text);
+  white-space: pre;
+  overflow-x: auto;
+  margin-bottom: 24px;
+}
+.code .blank {
+  display: inline-block;
+  min-width: 70px;
+  padding: 1px 10px;
+  background: var(--warn-dim);
+  color: var(--warn);
+  border: 1px dashed var(--warn);
+  border-radius: 4px;
+  font-weight: 600;
+  margin: 0 2px;
+  text-align: center;
+}
+.code .blank.filled {
+  background: var(--success-dim);
+  color: var(--success);
+  border-style: solid;
+  border-color: var(--success);
+}
+.code .blank.wrong {
+  background: var(--error-dim);
+  color: var(--error);
+  border-style: solid;
+  border-color: var(--error);
+}
+
+/* ====== Options ====== */
+.options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.option {
+  padding: 16px 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  text-align: center;
+  transition: all 0.15s;
+  user-select: none;
+}
+.option:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  transform: translateY(-1px);
+}
+.option.selected {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+.option.correct {
+  border-color: var(--success);
+  background: var(--success-dim);
+  color: var(--success);
+}
+.option.wrong {
+  border-color: var(--error);
+  background: var(--error-dim);
+  color: var(--error);
+}
+
+/* ====== Feedback ====== */
+.feedback {
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  line-height: 1.5;
+  display: none;
+  border: 1px solid;
+}
+.feedback.show { display: block; }
+.feedback.correct {
+  background: var(--success-dim);
+  border-color: var(--success);
+  color: var(--success);
+}
+.feedback.wrong {
+  background: var(--error-dim);
+  border-color: var(--error);
+  color: var(--error);
+}
+.feedback small { display: block; margin-top: 6px; opacity: 0.85; font-size: 12.5px; }
+.feedback b { font-family: 'JetBrains Mono', monospace; }
+
+/* ====== Buttons ====== */
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.btn {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+}
+.btn-primary:hover:not(:disabled) {
+  background: #38f0c8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(46, 231, 193, 0.3);
+}
+.btn-primary:disabled {
+  background: var(--surface-2);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+/* ====== Order mode ====== */
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.line {
+  padding: 12px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.line:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.line.selected {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--accent);
+  cursor: default;
+}
+.line .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--border);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  flex-shrink: 0;
+}
+.line.selected .num { background: var(--accent); color: var(--bg); }
+.line-divider {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 16px 0 10px 0;
+}
+.answer-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 60px;
+  padding: 14px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 10px;
+  margin-bottom: 18px;
+}
+.answer-zone:empty::before {
+  content: "↑ 위에서 클릭한 순서대로 쌓여요";
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+  padding: 12px 0;
+}
+
+/* ====== Hint box ====== */
+.hint {
+  background: var(--warn-dim);
+  border-left: 3px solid var(--warn);
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: var(--warn);
+}
+.hint b { color: var(--warn); }
+
+/* ====== Textarea ====== */
+.textarea {
+  width: 100%;
+  min-height: 220px;
+  padding: 18px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13.5px;
+  line-height: 1.6;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.textarea:focus { border-color: var(--accent); }
+
+/* ====== Footer ====== */
+.footer {
+  text-align: center;
+  padding: 24px 0 0 0;
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.footer-text {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.footer-text a {
+  color: var(--text-dim);
+  cursor: pointer;
+  margin-left: 8px;
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+}
+.footer-text a:hover { color: var(--text); }
+
+/* ====== Map mode ====== */
+.map-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.map-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+.map-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+.section {
+  margin-bottom: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: all 0.2s;
+}
+.section:hover { border-color: var(--border-strong); }
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--surface-2);
+  cursor: pointer;
+  user-select: none;
+}
+.section-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+  flex-shrink: 0;
+}
+.section-badge.header   { background: rgba(99, 102, 241, 0.2);  color: #a5b4fc; }
+.section-badge.global   { background: rgba(245, 158, 11, 0.2);  color: #fbbf24; }
+.section-badge.function { background: rgba(46, 231, 193, 0.2);  color: var(--accent); }
+.section-badge.main     { background: rgba(244, 114, 182, 0.2); color: #f9a8d4; }
+.section-badge.sub      { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
+.section-info { flex: 1; }
+.section-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.section-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.section-toggle {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  margin-left: 10px;
+}
+.section-body {
+  display: none;
+}
+.section.open .section-body { display: block; }
+.section.open .section-toggle { transform: rotate(90deg); }
+.section-code {
+  background: var(--bg);
+  padding: 16px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text);
+  white-space: pre;
+  overflow-x: auto;
+  border-top: 1px solid var(--border);
+}
+.section-note {
+  padding: 12px 18px;
+  background: var(--bg-2);
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.section-note b { color: var(--accent); }
+.map-toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.map-toolbar .btn {
+  padding: 8px 16px;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  body { padding: 20px 12px; }
+  .card { padding: 22px; }
+  .mode-bar { grid-template-columns: repeat(3, 1fr); }
+  .options { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Brand -->
+  <div class="brand">
+    <div class="brand-logo">
+      <div class="brand-mark">F</div>
+      <div class="brand-text">
+        <div class="brand-name">Finn And <span>Study</span></div>
+        <div class="brand-tag">C++ thread patterns · drill mode</div>
+      </div>
+    </div>
+    <div class="streak-pill" id="streak">
+      <span>🔥</span>
+      <span id="streakNum">0</span>
+    </div>
+  </div>
+
+  <!-- Mode -->
+  <div class="mode-bar">
+    <div class="mode-tab active" data-mode="map">Map</div>
+    <div class="mode-tab" data-mode="fill">Fill</div>
+    <div class="mode-tab" data-mode="order">Order</div>
+    <div class="mode-tab" data-mode="classify">Classify</div>
+    <div class="mode-tab" data-mode="write">Write</div>
+  </div>
+
+  <!-- Topics -->
+  <div class="topic-bar" id="topicTabs"></div>
+
+  <!-- Stats -->
+  <div id="statsBlock">
+    <div class="stats">
+      <span>Solved <b id="progressText">0 / 0</b></span>
+      <span>Accuracy <b id="accuracy">—</b></span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <!-- Main -->
+  <div id="mainArea"></div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-text">
+      built for muscle memory
+      <a onclick="resetProgress()">reset progress</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============= 문제 데이터 =============
+
+// ============= MAP 데이터 (전체 코드 구조) =============
+
+const MAPS = {
+  "01_thread (가장 기본)": {
+    desc: "스레드 3개를 만들어 각자 일 시키고, 모두 끝날 때까지 기다리기.",
+    sections: [
+      {
+        kind: "header", badge: "1",
+        label: "헤더",
+        sub: "필요한 표준 라이브러리 포함",
+        code: `#include <iostream>
+#include <thread>
+using namespace std;`,
+        note: "<b>&lt;thread&gt;</b>를 포함해야 std::thread를 사용할 수 있어요."
+      },
+      {
+        kind: "function", badge: "2",
+        label: "worker 함수들",
+        sub: "각 스레드가 실행할 작업",
+        code: `void func1() {
+    for (int i = 0; i < 10; i++)
+        cout << "Thread 1 Working!\\n";
+}
+
+void func2() { /* 동일한 패턴 */ }
+void func3() { /* 동일한 패턴 */ }`,
+        note: "각 worker는 <b>독립적인 함수</b>예요. main과 동시에 별도 스레드로 돌아갑니다."
+      },
+      {
+        kind: "main", badge: "3",
+        label: "main",
+        sub: "스레드 생성 → join 대기",
+        code: `int main() {
+    thread t1(func1);    // 스레드 생성 (즉시 시작)
+    thread t2(func2);
+    thread t3(func3);
+
+    t1.join();           // 끝날 때까지 대기
+    t2.join();
+    t3.join();
+}`,
+        note: "<b>join()</b>이 없으면 main이 먼저 끝나버려서 프로그램이 std::terminate() 됩니다."
+      }
+    ]
+  },
+
+  "02_thread_para (일 나누기 + 결과)": {
+    desc: "큰 일(0~9999 합산)을 4개로 나눠서 동시에 처리하고, 결과를 포인터로 모음.",
+    sections: [
+      {
+        kind: "header", badge: "1",
+        label: "헤더",
+        sub: "thread, vector, cstdio",
+        code: `#include <cstdio>
+#include <iostream>
+#include <thread>
+#include <vector>
+using namespace std;`,
+        note: "vector를 쓰니 <b>&lt;vector&gt;</b>도 필요해요."
+      },
+      {
+        kind: "function", badge: "2",
+        label: "worker (구간 합산)",
+        sub: "받은 구간을 합산해서 결과를 포인터로 저장",
+        code: `void worker(vector<int>::iterator start,
+            vector<int>::iterator end,
+            int* result)
+{
+    int sum = 0;
+    for (auto itr = start; itr < end; ++itr)
+        sum += *itr;
+    *result = sum;       // 포인터로 결과 돌려줌
+}`,
+        note: "스레드는 return 못 받으니 <b>포인터 인자</b>로 결과를 받습니다."
+      },
+      {
+        kind: "main", badge: "3",
+        label: "main",
+        sub: "데이터 준비 → 일 분배 → 결과 합산",
+        code: `int main() {
+    vector<int> data(10000);
+    for (int i = 0; i < 10000; i++) data[i] = i;
+
+    vector<int> partial_sums(4);          // 결과 저장소
+    vector<thread> workers;               // 스레드 명단
+
+    for (int i = 0; i < 4; i++) {
+        workers.push_back(thread(worker,
+            data.begin() + i * 2500,
+            data.begin() + (i+1) * 2500,
+            &partial_sums[i]));
+    }
+
+    for (int i = 0; i < 4; i++) workers[i].join();
+
+    int total = 0;
+    for (int i = 0; i < 4; i++) total += partial_sums[i];
+    cout << "전체 합 : " << total << endl;
+}`,
+        note: "각 스레드가 <b>자기 구간만</b> 합산 → 마지막에 main이 4개 결과를 합쳐요."
+      }
+    ]
+  },
+
+  "03_counter (race condition + mutex)": {
+    desc: "같은 변수를 여러 스레드가 동시에 증가시킬 때의 위험과, mutex로 해결하는 패턴.",
+    sections: [
+      {
+        kind: "header", badge: "1",
+        label: "헤더",
+        sub: "thread, vector, mutex",
+        code: `#include <iostream>
+#include <thread>
+#include <vector>
+#include <mutex>
+using namespace std;`,
+        note: "mutex 쓰려면 <b>&lt;mutex&gt;</b> 헤더 추가."
+      },
+      {
+        kind: "global", badge: "2",
+        label: "전역 자물쇠",
+        sub: "모든 스레드가 공유해야 의미 있음",
+        code: `mutex mtx;`,
+        note: "전역이거나 클래스 멤버여야 모든 스레드가 <b>같은 자물쇠</b>를 봅니다."
+      },
+      {
+        kind: "function", badge: "3",
+        label: "worker (공유 변수 수정)",
+        sub: "lock_guard로 보호하면서 counter 증가",
+        code: `void worker(int& counter) {
+    for (int i = 0; i < 10000; i++) {
+        lock_guard<mutex> lock(mtx);   // 자동 잠금
+        counter += 1;
+    }   // 스코프 끝나면 자동 해제
+}`,
+        note: "<b>lock_guard</b>는 생성 시 lock, 소멸 시 unlock을 자동으로 해줍니다 (RAII)."
+      },
+      {
+        kind: "main", badge: "4",
+        label: "main",
+        sub: "스레드 4개로 카운터 증가",
+        code: `int main() {
+    int counter = 0;
+    vector<thread> workers;
+
+    for (int i = 0; i < 4; i++)
+        workers.push_back(thread(worker, std::ref(counter)));
+
+    for (int i = 0; i < 4; i++) workers[i].join();
+
+    cout << "Counter 최종 값 : " << counter << endl;
+}`,
+        note: "참조로 넘기려면 <b>std::ref()</b>로 감싸야 합니다 (thread는 기본이 복사)."
+      }
+    ]
+  },
+
+  "04_ticket (복합 작업 보호)": {
+    desc: "if 조건 + 변수 수정처럼 여러 줄이 한 묶음이 되어야 안전한 경우.",
+    sections: [
+      {
+        kind: "header", badge: "1",
+        label: "헤더",
+        sub: "thread, vector, mutex (+windows.h 한글)",
+        code: `#include <iostream>
+#include <thread>
+#include <vector>
+#include <mutex>
+#include <windows.h>
+using namespace std;`,
+        note: "windows.h는 콘솔 한글 깨짐 방지용입니다."
+      },
+      {
+        kind: "global", badge: "2",
+        label: "전역 자원",
+        sub: "공유 데이터 + 자물쇠",
+        code: `int tickets = 100;   // 남은 티켓
+int sold = 0;        // 판매량
+mutex mtx;           // 자물쇠`,
+        note: "공유 자원 옆에 그 자물쇠를 같이 두면 관계가 명확해요."
+      },
+      {
+        kind: "function", badge: "3",
+        label: "seller 함수",
+        sub: "매진까지 반복 판매",
+        code: `void seller(int id) {
+    while (true) {
+        lock_guard<mutex> lock(mtx);
+
+        if (tickets <= 0) break;       // 매진 체크 + 종료
+        tickets--;                      // 차감
+        sold++;                         // 판매량 증가
+        cout << "판매원 " << id << ": ...\\n";
+    }
+}`,
+        note: "<b>if + tickets-- + sold++</b> 가 한 묶음이라 lock_guard로 전체를 보호해야 안전."
+      },
+      {
+        kind: "main", badge: "4",
+        label: "main",
+        sub: "판매원 4명 가동 + 결과 검증",
+        code: `int main() {
+    SetConsoleOutputCP(CP_UTF8);
+
+    vector<thread> sellers;
+    for (int i = 1; i <= 4; i++)
+        sellers.push_back(thread(seller, i));
+
+    for (int i = 0; i < 4; i++) sellers[i].join();
+
+    cout << "총 판매: " << sold << ", 남은: " << tickets << endl;
+}`,
+        note: "mutex가 없으면 <b>초과 판매</b>(음수 티켓) 같은 사고가 발생할 수 있어요."
+      }
+    ]
+  },
+
+  "5가지 패턴 카드": {
+    desc: "스레드 코드의 거의 모든 형태는 이 5개 패턴의 조합이에요.",
+    sections: [
+      {
+        kind: "function", badge: "P1",
+        label: "패턴 1: 일 시키기 (결과 없음)",
+        sub: "그냥 함수를 별도 스레드로 실행",
+        code: `void worker() { /* 일 */ }
+
+thread t(worker);
+t.join();`,
+        note: "가장 단순한 형태. 화면 출력이나 부수 작업용."
+      },
+      {
+        kind: "function", badge: "P2",
+        label: "패턴 2: 결과 받기 (포인터)",
+        sub: "포인터 인자로 결과 돌려받기",
+        code: `void worker(int* result) {
+    *result = 42;
+}
+
+int answer;
+thread t(worker, &answer);
+t.join();`,
+        note: "스레드는 return 못 받으니 <b>포인터/참조</b>로 결과 받음."
+      },
+      {
+        kind: "function", badge: "P3",
+        label: "패턴 3: 공유 변수 수정 (mutex)",
+        sub: "ref + mutex 조합",
+        code: `mutex mtx;
+
+void worker(int& counter) {
+    lock_guard<mutex> lock(mtx);
+    counter += 1;
+}
+
+thread t(worker, std::ref(counter));`,
+        note: "여러 스레드가 같은 변수 만질 때 필수. ref로 참조 전달."
+      },
+      {
+        kind: "function", badge: "P4",
+        label: "패턴 4: 일 나누기",
+        sub: "데이터 구간 분배 + 결과 모으기",
+        code: `vector<int> results(N);
+vector<thread> workers;
+
+for (int i = 0; i < N; i++) {
+    workers.push_back(thread(worker,
+        data.begin() + i * chunk,
+        data.begin() + (i+1) * chunk,
+        &results[i]));
+}
+for (auto& w : workers) w.join();`,
+        note: "병렬 처리의 정석. 각자 자기 구간 → 마지막에 합치기."
+      },
+      {
+        kind: "function", badge: "P5",
+        label: "패턴 5: 큐 공유 (producer/consumer)",
+        sub: "여러 스레드가 큐에 push/pop",
+        code: `mutex q_mtx;
+queue<Data> q;
+
+void producer() {
+    lock_guard<mutex> lock(q_mtx);
+    q.push(data);
+}
+
+void consumer() {
+    lock_guard<mutex> lock(q_mtx);
+    if (!q.empty()) {
+        auto d = q.front();
+        q.pop();
+    }
+}`,
+        note: "센서 → 처리, 카메라 → 검사 같은 데이터 흐름에 자주 등장."
+      }
+    ]
+  }
+};
+
+const QUESTIONS = {
+  fill: {
+    "01_thread": [
+      {
+        q: "스레드 헤더 — 어떤 라이브러리를 포함해야 하나요?",
+        code: `#include <iostream>
+#include <____>
+using namespace std;
+
+void func1() {
+    for (int i = 0; i < 10; i++)
+        cout << "Thread 1 Working!\\n";
+}
+
+int main() {
+    thread t1(func1);
+    t1.join();
+}`,
+        options: ["thread", "threading", "concurrent", "mutex"],
+        answer: "thread",
+        hint: "std::thread를 쓰려면 필요한 헤더"
+      },
+      {
+        q: "스레드 생성 — thread 생성자에 첫 인자로 무엇이 들어가나요?",
+        code: `#include <iostream>
+#include <thread>
+using namespace std;
+
+void func1() { /* 일 */ }
+
+int main() {
+    thread t1(____);
+    t1.join();
+}`,
+        options: ["func1", "&func1", "func1()", "*func1"],
+        answer: "func1",
+        hint: "함수 이름 그대로 (괄호 없이)"
+      },
+      {
+        q: "main 종료 직전 — 스레드가 끝날 때까지 기다리는 함수는?",
+        code: `#include <thread>
+using namespace std;
+
+void func1() { /* 일 */ }
+void func2() { /* 일 */ }
+
+int main() {
+    thread t1(func1);
+    thread t2(func2);
+
+    t1.____();
+    t2.____();
+}`,
+        options: ["join", "wait", "stop", "end"],
+        answer: "join",
+        hint: "안 부르면 std::terminate() 호출됨"
+      },
+      {
+        q: "백그라운드 스레드 — main이 안 기다리고 진행하게 하려면?",
+        code: `#include <thread>
+using namespace std;
+
+void background_task() { /* 긴 작업 */ }
+
+int main() {
+    thread t(background_task);
+    t.______();   // 책임지지 않고 분리
+    // main은 즉시 다음으로 진행
+}`,
+        options: ["detach", "release", "free", "background"],
+        answer: "detach",
+        hint: "join 안 부르면 terminate, 그래서 detach로 분리"
+      },
+      {
+        q: "인자 있는 스레드 — 함수 인자를 같이 넘기려면?",
+        code: `#include <thread>
+using namespace std;
+
+void greet(string name, int times) {
+    for (int i = 0; i < times; i++)
+        cout << "Hello, " << name << "\\n";
+}
+
+int main() {
+    thread t(greet, ____, 3);
+    t.join();
+}`,
+        options: ["\"Finn\"", "Finn", "&\"Finn\"", "*\"Finn\""],
+        answer: "\"Finn\"",
+        hint: "그냥 함수 호출하듯 인자 전달"
+      },
+      {
+        q: "스레드 ID 얻기 — 자기 자신의 스레드 ID는?",
+        code: `#include <thread>
+#include <iostream>
+using namespace std;
+
+void worker() {
+    thread::id myid = std::this_thread::____();
+    cout << "내 ID: " << myid << "\\n";
+}`,
+        options: ["get_id", "id", "get", "self"],
+        answer: "get_id",
+        hint: "this_thread namespace의 함수"
+      },
+      {
+        q: "스레드 잠시 멈추기 — 어떤 함수?",
+        code: `#include <thread>
+#include <chrono>
+using namespace std;
+
+void slow_worker() {
+    cout << "시작\\n";
+    std::this_thread::____(chrono::seconds(1));   // 1초 멈춤
+    cout << "끝\\n";
+}`,
+        options: ["sleep_for", "sleep", "wait", "delay"],
+        answer: "sleep_for",
+        hint: "for 기간만큼 잠"
+      },
+      {
+        q: "iostream 헤더 — cout을 쓰려면?",
+        code: `#include <____>
+#include <thread>
+using namespace std;
+
+void func1() {
+    cout << "Working\\n";
+}
+
+int main() {
+    thread t1(func1);
+    t1.join();
+}`,
+        options: ["iostream", "ostream", "stdio", "io"],
+        answer: "iostream",
+        hint: "표준 입출력 헤더"
+      },
+      {
+        q: "for문 반복 횟수 — 카운터를 10번 증가하려면 조건은?",
+        code: `void func1() {
+    for (int i = 0; i < ____; i++)
+        cout << "Thread 1 Working!\\n";
+}`,
+        options: ["10", "9", "i", "true"],
+        answer: "10",
+        hint: "0부터 시작해서 10번 반복하는 표준 패턴"
+      },
+      {
+        q: "변수 초기화 — i 시작값?",
+        code: `void func1() {
+    for (int i = ____; i < 10; i++)
+        cout << "Working!\\n";
+}`,
+        options: ["0", "1", "10", "i"],
+        answer: "0",
+        hint: "인덱스 시작점"
+      },
+      {
+        q: "main 반환 타입 — C++에서 main 함수의 리턴 타입은?",
+        code: `#include <thread>
+
+____ main() {
+    thread t1(func1);
+    t1.join();
+}`,
+        options: ["int", "void", "main", "return"],
+        answer: "int",
+        hint: "표준에서 정한 반환 타입"
+      },
+      {
+        q: "namespace 사용 — std:: 접두사를 생략하려면?",
+        code: `#include <iostream>
+#include <thread>
+________ namespace std;
+
+void func1() {
+    cout << "Hello\\n";
+}`,
+        options: ["using", "include", "namespace", "import"],
+        answer: "using",
+        hint: "라이브러리 namespace 끌어오기"
+      },
+      {
+        q: "두 번째 스레드 생성 — 패턴 그대로",
+        code: `int main() {
+    thread t1(func1);
+    ____ t2(func2);
+    thread t3(func3);
+
+    t1.join();
+    t2.join();
+    t3.join();
+}`,
+        options: ["thread", "Thread", "auto", "new thread"],
+        answer: "thread",
+        hint: "타입 이름 그대로"
+      },
+      {
+        q: "함수 반환 타입 — 결과 없는 worker 함수는?",
+        code: `____ func1() {
+    for (int i = 0; i < 10; i++)
+        cout << "Working\\n";
+}`,
+        options: ["void", "int", "return", "auto"],
+        answer: "void",
+        hint: "리턴값이 없을 때"
+      }
+    ],
+
+    "02_thread_para": [
+      {
+        q: "worker 함수가 결과를 main에 돌려주는 방법 — 어떤 타입으로 받나요?",
+        code: `void worker(vector<int>::iterator start,
+            vector<int>::iterator end,
+            ____ result)
+{
+    int sum = 0;
+    for (auto itr = start; itr < end; ++itr)
+        sum += *itr;
+    *result = sum;
+}`,
+        options: ["int*", "int&", "int", "vector<int>"],
+        answer: "int*",
+        hint: "스레드는 return을 못 받으니 포인터로 결과를 돌려줘요"
+      },
+      {
+        q: "iterator의 값 꺼내기 — 어떤 연산자?",
+        code: `void worker(vector<int>::iterator start,
+            vector<int>::iterator end,
+            int* result)
+{
+    int sum = 0;
+    for (auto itr = start; itr < end; ++itr) {
+        sum += ____itr;     // 값 꺼내기
+    }
+    *result = sum;
+}`,
+        options: ["*", "&", "->", "@"],
+        answer: "*",
+        hint: "포인터의 dereference와 동일"
+      },
+      {
+        q: "결과 저장 — 포인터가 가리키는 곳에 값을 쓰려면?",
+        code: `void worker(vector<int>::iterator start,
+            vector<int>::iterator end,
+            int* result)
+{
+    int sum = 0;
+    for (auto itr = start; itr < end; ++itr)
+        sum += *itr;
+    ____result = sum;       // 결과 저장
+}`,
+        options: ["*", "&", "result.", "result->"],
+        answer: "*",
+        hint: "포인터에 값 쓸 때도 *"
+      },
+      {
+        q: "vector 첫 원소 위치 — iterator를 얻는 함수는?",
+        code: `int main() {
+    vector<int> data(10000);
+    for (int i = 0; i < 10000; i++) data[i] = i;
+
+    vector<int> partial_sums(4);
+    vector<thread> workers;
+
+    for (int i = 0; i < 4; i++) {
+        workers.push_back(thread(worker,
+            data.____() + i * 2500,
+            data.____() + (i+1) * 2500,
+            &partial_sums[i]));
+    }
+}`,
+        options: ["begin", "start", "front", "head"],
+        answer: "begin",
+        hint: "iterator는 begin()에서 시작, end()에서 끝"
+      },
+      {
+        q: "포인터 전달 — partial_sums의 i번째 칸 주소를 넘기려면?",
+        code: `int main() {
+    vector<int> data(10000);
+    vector<int> partial_sums(4);
+    vector<thread> workers;
+
+    for (int i = 0; i < 4; i++) {
+        workers.push_back(thread(worker,
+            data.begin() + i * 2500,
+            data.begin() + (i+1) * 2500,
+            ____partial_sums[i]));    // 주소 전달
+    }
+}`,
+        options: ["&", "*", "ref(", "addr("],
+        answer: "&",
+        hint: "변수의 주소를 얻는 연산자"
+      },
+      {
+        q: "vector 끝에 thread 추가 — 어떤 멤버 함수?",
+        code: `vector<thread> workers;
+
+for (int i = 0; i < 4; i++) {
+    workers.________(thread(worker,
+        data.begin() + i * 2500,
+        data.begin() + (i+1) * 2500,
+        &partial_sums[i]));
+}
+
+for (int i = 0; i < 4; i++) {
+    workers[i].join();
+}`,
+        options: ["push_back", "append", "add", "insert_back"],
+        answer: "push_back",
+        hint: "vector 뒤에 추가"
+      },
+      {
+        q: "타입 자동 추론 — for문에서 iterator 타입을 짧게 쓰려면?",
+        code: `void worker(vector<int>::iterator start,
+            vector<int>::iterator end,
+            int* result)
+{
+    int sum = 0;
+    for (____ itr = start; itr < end; ++itr) {
+        sum += *itr;
+    }
+    *result = sum;
+}`,
+        options: ["auto", "var", "let", "int"],
+        answer: "auto",
+        hint: "컴파일러가 타입을 자동으로 추론"
+      },
+      {
+        q: "iterator 타입 — worker의 매개변수 타입 작성",
+        code: `void worker(vector<int>::________  start,
+            vector<int>::________  end,
+            int* result)
+{
+    int sum = 0;
+    for (auto itr = start; itr < end; ++itr)
+        sum += *itr;
+    *result = sum;
+}`,
+        options: ["iterator", "pointer", "index", "ptr"],
+        answer: "iterator",
+        hint: "vector 전용 포인터 타입"
+      },
+      {
+        q: "최종 합산 — main에서 4명의 결과를 어떻게 합치나?",
+        code: `int main() {
+    vector<int> partial_sums(4);
+    // ... worker 4개 돌리고 join 끝난 후
+
+    int total = 0;
+    for (int i = 0; i < 4; i++) {
+        total ____ partial_sums[i];
+    }
+    cout << "전체 합 : " << total << endl;
+}`,
+        options: ["+=", "=", "+", "-="],
+        answer: "+=",
+        hint: "기존 값에 더하기"
+      },
+      {
+        q: "스레드 join 루프 — 모든 worker 대기",
+        code: `int main() {
+    vector<thread> workers;
+    // ... thread 4개 push_back 후
+
+    for (int i = 0; i < 4; i++) {
+        workers[i].____();
+    }
+
+    // 여기 도달하면 4명 모두 끝난 상태
+}`,
+        options: ["join", "wait", "stop", "detach"],
+        answer: "join",
+        hint: "끝날 때까지 대기"
+      },
+      {
+        q: "vector 초기화 — 10000개 원소를 갖는 벡터?",
+        code: `int main() {
+    vector<int> data(________);     // 크기 10000
+    for (int i = 0; i < 10000; i++)
+        data[i] = i;
+}`,
+        options: ["10000", "10000, 0", "{10000}", "[10000]"],
+        answer: "10000",
+        hint: "생성자 인자로 크기"
+      },
+      {
+        q: "결과 저장소 — partial_sums의 크기는 몇?",
+        code: `int main() {
+    vector<int> data(10000);
+    for (int i = 0; i < 10000; i++) data[i] = i;
+
+    vector<int> partial_sums(____);    // 스레드 4개의 결과 받을 자리
+    vector<thread> workers;
+
+    for (int i = 0; i < 4; i++) { /* ... */ }
+}`,
+        options: ["4", "10000", "i", "0"],
+        answer: "4",
+        hint: "스레드 개수와 동일"
+      },
+      {
+        q: "iterator 시작 — 함수 매개변수 이름",
+        code: `void worker(vector<int>::iterator ____,
+            vector<int>::iterator end,
+            int* result)
+{
+    int sum = 0;
+    for (auto itr = ____; itr < end; ++itr)
+        sum += *itr;
+    *result = sum;
+}`,
+        options: ["start", "begin", "first", "from"],
+        answer: "start",
+        hint: "관용적 이름"
+      },
+      {
+        q: "구간 끝 위치 — i번째 구간의 끝은?",
+        code: `for (int i = 0; i < 4; i++) {
+    workers.push_back(thread(worker,
+        data.begin() + i * 2500,
+        data.begin() + (____) * 2500,
+        &partial_sums[i]));
+}`,
+        options: ["i + 1", "i", "i - 1", "i * 2"],
+        answer: "i + 1",
+        hint: "다음 구간의 시작 = 이번 구간의 끝"
+      },
+      {
+        q: "for 종료 조건 — itr이 end에 도달하기 전까지",
+        code: `void worker(vector<int>::iterator start,
+            vector<int>::iterator end,
+            int* result)
+{
+    int sum = 0;
+    for (auto itr = start; itr ____ end; ++itr)
+        sum += *itr;
+    *result = sum;
+}`,
+        options: ["<", "<=", "!=", "=="],
+        answer: "<",
+        hint: "iterator는 < 또는 != 둘 다 가능. 이 코드는 < 사용"
+      },
+      {
+        q: "iterator 증가 — 다음 위치로 이동",
+        code: `void worker(vector<int>::iterator start,
+            vector<int>::iterator end,
+            int* result)
+{
+    int sum = 0;
+    for (auto itr = start; itr < end; ____itr)
+        sum += *itr;
+    *result = sum;
+}`,
+        options: ["++", "--", "+=1", "next"],
+        answer: "++",
+        hint: "전위 증가"
+      }
+    ],
+
+    "03_counter (mutex)": [
+      {
+        q: "mutex 헤더 — 어떤 라이브러리?",
+        code: `#include <iostream>
+#include <thread>
+#include <vector>
+#include <____>
+using namespace std;
+
+mutex mtx;
+
+void worker(int& counter) {
+    for (int i = 0; i < 10000; i++) {
+        lock_guard<mutex> lock(mtx);
+        counter += 1;
+    }
+}`,
+        options: ["mutex", "thread", "lock", "sync"],
+        answer: "mutex",
+        hint: "자기 이름 그대로"
+      },
+      {
+        q: "전역 자물쇠 — 어떤 타입으로 선언?",
+        code: `#include <thread>
+#include <mutex>
+using namespace std;
+
+____ mtx;        // 모든 스레드가 공유할 자물쇠
+
+void worker(int& counter) {
+    for (int i = 0; i < 10000; i++) {
+        lock_guard<mutex> lock(mtx);
+        counter += 1;
+    }
+}`,
+        options: ["mutex", "lock", "guard", "Lock"],
+        answer: "mutex",
+        hint: "소문자, 표준 라이브러리"
+      },
+      {
+        q: "자동 잠금/해제 도구 — 어떤 클래스?",
+        code: `mutex mtx;
+
+void worker(int& counter) {
+    for (int i = 0; i < 10000; i++) {
+        ________<mutex> lock(mtx);   // 생성 시 lock, 소멸 시 unlock
+        counter += 1;
+    }   // 스코프 끝나면 자동 해제
+}`,
+        options: ["lock_guard", "scoped_guard", "auto_lock", "mutex_guard"],
+        answer: "lock_guard",
+        hint: "lock + guard = 자물쇠 지킴이"
+      },
+      {
+        q: "lock_guard 템플릿 인자 — 어떤 타입의 자물쇠를 다룰지?",
+        code: `mutex mtx;
+
+void worker(int& counter) {
+    for (int i = 0; i < 10000; i++) {
+        lock_guard<____> lock(mtx);
+        counter += 1;
+    }
+}`,
+        options: ["mutex", "auto", "Lock", "Type"],
+        answer: "mutex",
+        hint: "어떤 종류 자물쇠? → 일반 mutex"
+      },
+      {
+        q: "lock_guard 생성자 인자 — 어느 자물쇠를 잠글지?",
+        code: `mutex mtx;
+
+void worker(int& counter) {
+    for (int i = 0; i < 10000; i++) {
+        lock_guard<mutex> lock(____);   // 이 자물쇠를 잠가라
+        counter += 1;
+    }
+}`,
+        options: ["mtx", "&mtx", "*mtx", "this"],
+        answer: "mtx",
+        hint: "전역 변수 이름 그대로"
+      },
+      {
+        q: "참조로 변수 넘기기 — thread에서 참조를 전달하려면?",
+        code: `mutex mtx;
+
+void worker(int& counter) {
+    lock_guard<mutex> lock(mtx);
+    counter += 1;
+}
+
+int main() {
+    int counter = 0;
+    vector<thread> workers;
+
+    for (int i = 0; i < 4; i++) {
+        workers.push_back(thread(worker, std::____(counter)));
+    }
+    for (int i = 0; i < 4; i++) workers[i].join();
+}`,
+        options: ["ref", "addr", "&", "pointer"],
+        answer: "ref",
+        hint: "thread는 기본이 복사. 참조 쓰려면 ref로 감싸야 함"
+      },
+      {
+        q: "worker 매개변수 — counter를 참조로 받으려면?",
+        code: `mutex mtx;
+
+void worker(int____ counter) {        // 원본을 수정하려면
+    lock_guard<mutex> lock(mtx);
+    counter += 1;
+}
+
+// 호출 시: thread(worker, std::ref(counter))`,
+        options: ["&", "*", "(no symbol)", "&&"],
+        answer: "&",
+        hint: "참조 타입 표시"
+      },
+      {
+        q: "1씩 증가 — counter 값을 어떻게 늘리나?",
+        code: `mutex mtx;
+
+void worker(int& counter) {
+    for (int i = 0; i < 10000; i++) {
+        lock_guard<mutex> lock(mtx);
+        counter ____ 1;
+    }
+}`,
+        options: ["+=", "++", "+", "= +"],
+        answer: "+=",
+        hint: "복합 대입 연산자"
+      },
+      {
+        q: "스레드 생성 보관 — vector<thread>에 어떻게 추가?",
+        code: `int main() {
+    int counter = 0;
+    vector<thread> workers;
+
+    for (int i = 0; i < 4; i++) {
+        workers.____(thread(worker, std::ref(counter)));
+    }
+    for (int i = 0; i < 4; i++) workers[i].join();
+}`,
+        options: ["push_back", "add", "append", "insert"],
+        answer: "push_back",
+        hint: "vector 끝에 추가"
+      },
+      {
+        q: "공유 카운터 초기화 — main에서 어떻게?",
+        code: `int main() {
+    int counter = ____;       // 시작값
+    vector<thread> workers;
+
+    for (int i = 0; i < 4; i++)
+        workers.push_back(thread(worker, std::ref(counter)));
+    for (int i = 0; i < 4; i++) workers[i].join();
+
+    cout << counter << endl;  // 40000
+}`,
+        options: ["0", "1", "{}", "NULL"],
+        answer: "0",
+        hint: "처음엔 빈 카운트"
+      },
+      {
+        q: "vector<thread> 생성 — 스레드 명단 자료구조",
+        code: `int main() {
+    int counter = 0;
+    ________<thread> workers;
+
+    for (int i = 0; i < 4; i++)
+        workers.push_back(thread(worker, std::ref(counter)));
+    for (int i = 0; i < 4; i++) workers[i].join();
+}`,
+        options: ["vector", "list", "array", "queue"],
+        answer: "vector",
+        hint: "동적 배열"
+      },
+      {
+        q: "for 반복 시작 — 4개 스레드 만드는 루프 시작",
+        code: `int main() {
+    int counter = 0;
+    vector<thread> workers;
+
+    for (int i = ____; i < 4; i++)
+        workers.push_back(thread(worker, std::ref(counter)));
+}`,
+        options: ["0", "1", "4", "i"],
+        answer: "0",
+        hint: "인덱스 시작은 0"
+      },
+      {
+        q: "namespace 명시 — std의 ref 함수를 부르려면",
+        code: `for (int i = 0; i < 4; i++) {
+    workers.push_back(thread(worker, ____::ref(counter)));
+}`,
+        options: ["std", "this", "self", "ref"],
+        answer: "std",
+        hint: "표준 라이브러리 namespace"
+      },
+      {
+        q: "for문 i 비교 — 4개 스레드를 join 하는 루프",
+        code: `for (int i = 0; i ____ 4; i++) {
+    workers[i].join();
+}`,
+        options: ["<", "<=", ">", "!="],
+        answer: "<",
+        hint: "0,1,2,3까지 → < 4"
+      },
+      {
+        q: "출력문 — counter 최종 값 출력",
+        code: `int main() {
+    int counter = 0;
+    // ... 스레드 4개 돌리고 join 끝난 후
+
+    cout << "Counter : " ____ counter << endl;
+}`,
+        options: ["<<", ">>", "+", ","],
+        answer: "<<",
+        hint: "스트림 출력 연산자"
+      },
+      {
+        q: "endl 줄바꿈 — 출력 끝에 어떤 manipulator?",
+        code: `cout << "Counter 최종 값 : " << counter << ____;`,
+        options: ["endl", "\"\\n\"", "newline", "br"],
+        answer: "endl",
+        hint: "줄바꿈 + flush"
+      }
+    ],
+
+    "04_ticket (복합 작업)": [
+      {
+        q: "while 반복 조건 — 매진까지 무한 시도하려면?",
+        code: `int tickets = 100;
+int sold = 0;
+mutex mtx;
+
+void seller(int id) {
+    while (____) {
+        lock_guard<mutex> lock(mtx);
+        if (tickets <= 0) break;
+        tickets--;
+        sold++;
+    }
+}`,
+        options: ["true", "1==1", "tickets", "running"],
+        answer: "true",
+        hint: "break로 빠져나가는 무한 루프"
+      },
+      {
+        q: "매진 체크 — 티켓이 0 이하면 종료, 어떤 비교?",
+        code: `void seller(int id) {
+    while (true) {
+        lock_guard<mutex> lock(mtx);
+
+        if (tickets ____ 0) {     // 매진?
+            break;
+        }
+        tickets--;
+        sold++;
+    }
+}`,
+        options: ["<=", "<", "==", ">="],
+        answer: "<=",
+        hint: "0 이하면 매진"
+      },
+      {
+        q: "임계 구역 보호 — 어떤 자물쇠 도구로 if + 변경을 감쌀까?",
+        code: `int tickets = 100;
+int sold = 0;
+mutex mtx;
+
+void seller(int id) {
+    while (true) {
+        ________<mutex> lock(mtx);    // if + 변경 묶음을 한꺼번에 보호
+
+        if (tickets <= 0) break;
+        tickets--;
+        sold++;
+    }
+}`,
+        options: ["lock_guard", "unique_lock", "scoped_lock", "mutex_guard"],
+        answer: "lock_guard",
+        hint: "단순 보호는 lock_guard가 정석"
+      },
+      {
+        q: "main에서 판매원 생성 — thread 첫 인자에 무엇?",
+        code: `void seller(int id) { /* ... */ }
+
+int main() {
+    vector<thread> sellers;
+
+    for (int i = 1; i <= 4; i++) {
+        sellers.push_back(thread(____, i));
+    }
+
+    for (int i = 0; i < 4; i++) sellers[i].join();
+}`,
+        options: ["seller", "&seller", "seller()", "*seller"],
+        answer: "seller",
+        hint: "함수 이름 그대로"
+      },
+      {
+        q: "한글 출력 — 윈도우 콘솔 UTF-8 설정 함수의 인자는?",
+        code: `#include <windows.h>
+
+int main() {
+    SetConsoleOutputCP(________);
+
+    cout << "판매원 1: 티켓 판매 완료\\n";
+}`,
+        options: ["CP_UTF8", "UTF8", "65001", "CP_KOREAN"],
+        answer: "CP_UTF8",
+        hint: "Windows API의 매크로 상수"
+      },
+      {
+        q: "티켓 감소 — 1장 차감하는 표현은?",
+        code: `void seller(int id) {
+    while (true) {
+        lock_guard<mutex> lock(mtx);
+        if (tickets <= 0) break;
+
+        tickets____;       // 1 차감
+        sold++;
+    }
+}`,
+        options: ["--", "-=", "-1", "= -1"],
+        answer: "--",
+        hint: "단축형 감소 연산자"
+      },
+      {
+        q: "while 탈출 — 매진이면 루프 나가기",
+        code: `void seller(int id) {
+    while (true) {
+        lock_guard<mutex> lock(mtx);
+
+        if (tickets <= 0) {
+            ____;             // 반복문 탈출
+        }
+        tickets--;
+        sold++;
+    }
+}`,
+        options: ["break", "return", "continue", "exit"],
+        answer: "break",
+        hint: "while/for를 빠져나가는 키워드"
+      },
+      {
+        q: "for 루프 — 판매원 4명을 어떻게 만들까?",
+        code: `void seller(int id) { /* ... */ }
+
+int main() {
+    vector<thread> sellers;
+
+    for (int i = ____; i <= 4; i++) {
+        sellers.push_back(thread(seller, i));
+    }
+    for (int i = 0; i < 4; i++) sellers[i].join();
+}`,
+        options: ["1", "0", "2", "i"],
+        answer: "1",
+        hint: "id가 1부터 시작 (1~4)"
+      },
+      {
+        q: "공유 변수 — 티켓 개수 전역 선언 위치",
+        code: `____ tickets = 100;        // 모든 판매원이 공유
+int sold = 0;
+mutex mtx;
+
+void seller(int id) { /* ... */ }`,
+        options: ["int", "static int", "extern int", "const int"],
+        answer: "int",
+        hint: "그냥 전역 변수"
+      },
+      {
+        q: "판매량 증가 — sold를 1 증가시키는 표현",
+        code: `void seller(int id) {
+    while (true) {
+        lock_guard<mutex> lock(mtx);
+        if (tickets <= 0) break;
+
+        tickets--;
+        sold____;       // 1 증가
+    }
+}`,
+        options: ["++", "+=1", "+1", "+="],
+        answer: "++",
+        hint: "단축형 증가"
+      },
+      {
+        q: "lock_guard 변수 이름 — 관례적으로 무엇?",
+        code: `void seller(int id) {
+    while (true) {
+        lock_guard<mutex> ____(mtx);
+        if (tickets <= 0) break;
+        tickets--;
+        sold++;
+    }
+}`,
+        options: ["lock", "guard", "m", "lg"],
+        answer: "lock",
+        hint: "보편적으로 사용하는 이름"
+      },
+      {
+        q: "main 진입 — 일반적인 main 시그니처",
+        code: `____ main() {
+    SetConsoleOutputCP(CP_UTF8);
+    vector<thread> sellers;
+    for (int i = 1; i <= 4; i++)
+        sellers.push_back(thread(seller, i));
+    for (int i = 0; i < 4; i++) sellers[i].join();
+}`,
+        options: ["int", "void", "main", "auto"],
+        answer: "int",
+        hint: "C++ 표준 main 반환 타입"
+      },
+      {
+        q: "thread 인자 — 판매원 ID도 같이 넘기려면",
+        code: `for (int i = 1; i <= 4; i++) {
+    sellers.push_back(thread(seller, ____));
+}`,
+        options: ["i", "&i", "*i", "{i}"],
+        answer: "i",
+        hint: "그냥 변수 값 전달"
+      },
+      {
+        q: "for 종료 — 1부터 4까지 도는 조건은?",
+        code: `for (int i = 1; i ____ 4; i++) {
+    sellers.push_back(thread(seller, i));
+}`,
+        options: ["<=", "<", "==", "!="],
+        answer: "<=",
+        hint: "i가 4 포함이니까"
+      }
+    ],
+
+    "C++ 기초 (전체 흐름 속에서)": [
+      {
+        q: "vector 선언과 push_back — 빈칸 채우기",
+        code: `#include <vector>
+#include <iostream>
+using namespace std;
+
+int main() {
+    ________<int> v;       // 동적 배열
+    v.push_back(10);
+    v.push_back(20);
+    v.push_back(30);
+
+    for (int x : v) cout << x << "\\n";
+}`,
+        options: ["vector", "list", "array", "deque"],
+        answer: "vector",
+        hint: "가장 흔한 동적 배열 컨테이너"
+      },
+      {
+        q: "auto + iterator — for문에서 짧게 쓰기",
+        code: `vector<int> data = {1, 2, 3, 4, 5};
+
+int sum = 0;
+for (____ itr = data.begin(); itr != data.end(); ++itr) {
+    sum += *itr;
+}
+cout << sum;   // 15`,
+        options: ["auto", "var", "let", "vector<int>::iterator"],
+        answer: "auto",
+        hint: "둘 다 가능하지만 짧은 쪽"
+      },
+      {
+        q: "포인터 매개변수 — 함수가 결과를 외부 변수에 저장하려면",
+        code: `void compute(int a, int b, ____ result) {
+    *result = a + b;
+}
+
+int main() {
+    int answer;
+    compute(3, 5, &answer);
+    cout << answer;     // 8
+}`,
+        options: ["int*", "int&", "int", "int**"],
+        answer: "int*",
+        hint: "주소를 받는 타입"
+      },
+      {
+        q: "참조 매개변수 — 원본 수정용 인자 타입",
+        code: `void increment(____ x) {
+    x++;
+}
+
+int main() {
+    int n = 10;
+    increment(n);
+    cout << n;       // 11
+}`,
+        options: ["int&", "int*", "int", "&int"],
+        answer: "int&",
+        hint: "값 복사 말고 원본"
+      },
+      {
+        q: "vector 원소 접근 — i번째 원소를 읽으려면",
+        code: `vector<int> data = {10, 20, 30};
+
+for (int i = 0; i < 3; i++) {
+    cout << data____ << "\\n";
+}`,
+        options: ["[i]", "(i)", ".at[i]", ".get(i)"],
+        answer: "[i]",
+        hint: "배열처럼 대괄호"
+      },
+      {
+        q: "range-based for — 모든 원소 순회",
+        code: `vector<int> data = {1, 2, 3};
+
+for (____ x : data) {
+    cout << x << "\\n";
+}`,
+        options: ["int", "auto", "vector", "*"],
+        answer: "int",
+        hint: "타입 명시 (auto도 가능하지만 보기엔 int)"
+      },
+      {
+        q: "string 헤더 — string을 쓰려면 필요한 헤더",
+        code: `#include <____>
+#include <iostream>
+using namespace std;
+
+int main() {
+    string name = "Finn";
+    cout << name << "\\n";
+}`,
+        options: ["string", "iostream", "cstring", "str"],
+        answer: "string",
+        hint: "헤더 이름이 곧 타입 이름"
+      },
+      {
+        q: "포인터 선언 — int를 가리키는 포인터",
+        code: `int x = 10;
+____ p = &x;
+
+cout << *p;   // 10`,
+        options: ["int*", "int&", "*int", "int"],
+        answer: "int*",
+        hint: "타입 뒤에 *"
+      },
+      {
+        q: "namespace 명시 — 정확한 cout 호출",
+        code: `// using namespace std; 없이
+
+int main() {
+    ____::cout << "Hello\\n";
+}`,
+        options: ["std", "namespace", "global", "main"],
+        answer: "std",
+        hint: "표준 라이브러리 namespace"
+      }
+    ]
+  },
+
+  order: {
+    "기본 스레드": [
+      {
+        q: "스레드 1개로 worker를 실행하고 끝날 때까지 기다리기",
+        lines: [
+          "#include <thread>",
+          "void worker() { /* 일 */ }",
+          "int main() {",
+          "    thread t(worker);",
+          "    t.join();",
+          "}"
+        ]
+      },
+      {
+        q: "참조로 카운터를 넘기는 패턴",
+        lines: [
+          "int counter = 0;",
+          "thread t(worker, std::ref(counter));",
+          "t.join();",
+          "cout << counter;"
+        ]
+      }
+    ],
+    "mutex 패턴": [
+      {
+        q: "전역 mutex로 카운터 보호하는 worker 함수",
+        lines: [
+          "#include <mutex>",
+          "mutex mtx;",
+          "void worker(int& counter) {",
+          "    lock_guard<mutex> lock(mtx);",
+          "    counter += 1;",
+          "}"
+        ]
+      },
+      {
+        q: "스레드 4개 만들고 모두 기다리기",
+        lines: [
+          "vector<thread> workers;",
+          "for (int i = 0; i < 4; i++) {",
+          "    workers.push_back(thread(worker, std::ref(counter)));",
+          "}",
+          "for (int i = 0; i < 4; i++) {",
+          "    workers[i].join();",
+          "}"
+        ]
+      }
+    ],
+    "결과 받기": [
+      {
+        q: "포인터로 결과를 돌려받는 패턴",
+        lines: [
+          "void worker(int* result) {",
+          "    *result = 42;",
+          "}",
+          "int answer;",
+          "thread t(worker, &answer);",
+          "t.join();",
+          "cout << answer;"
+        ]
+      }
+    ]
+  },
+
+  classify: {
+    "패턴 분류": [
+      {
+        code: "void worker() { cout << \"hi\\n\"; }\nthread t(worker);\nt.join();",
+        options: ["일 시키기 (결과 없음)", "결과 받기 (포인터)", "공유 변수 수정", "일 나누기"],
+        answer: "일 시키기 (결과 없음)",
+        hint: "return도 없고 공유 변수도 안 건드림"
+      },
+      {
+        code: "void worker(int* r) { *r = 100; }\nint x;\nthread t(worker, &x);\nt.join();",
+        options: ["일 시키기 (결과 없음)", "결과 받기 (포인터)", "공유 변수 수정", "일 나누기"],
+        answer: "결과 받기 (포인터)",
+        hint: "*r에 값 넣고 있음"
+      },
+      {
+        code: "void worker(int& c) {\n    lock_guard<mutex> l(mtx);\n    c++;\n}\nthread t(worker, std::ref(counter));",
+        options: ["일 시키기 (결과 없음)", "결과 받기 (포인터)", "공유 변수 수정 (mutex)", "일 나누기"],
+        answer: "공유 변수 수정 (mutex)",
+        hint: "ref + mutex + 공유 변수"
+      },
+      {
+        code: "vector<thread> ws;\nfor (int i = 0; i < 4; i++) {\n    ws.push_back(thread(worker,\n        data.begin()+i*N,\n        data.begin()+(i+1)*N,\n        &results[i]));\n}",
+        options: ["일 시키기 (결과 없음)", "결과 받기 (포인터)", "공유 변수 수정", "일 나누기 + 결과 받기"],
+        answer: "일 나누기 + 결과 받기",
+        hint: "데이터 구간 나눠서 각자 결과 저장"
+      },
+      {
+        code: "mutex mtx;\nqueue<Data> q;\nvoid producer() {\n    lock_guard<mutex> l(mtx);\n    q.push(d);\n}",
+        options: ["일 시키기 (결과 없음)", "결과 받기 (포인터)", "큐 공유 (producer)", "일 나누기"],
+        answer: "큐 공유 (producer)",
+        hint: "큐에 push하면서 mutex 보호"
+      }
+    ]
+  },
+
+  write: {
+    "백지 코딩": [
+      {
+        q: "스레드 t1을 만들어 worker() 함수를 실행시키고, 끝날 때까지 기다리세요.",
+        hint: "thread, join 사용",
+        keywords: ["thread", "t1", "worker", "join"]
+      },
+      {
+        q: "전역 mutex mtx를 선언하고, lock_guard로 보호된 채로 counter++를 수행하는 worker(int& counter)를 작성하세요.",
+        hint: "mutex, lock_guard, &, counter",
+        keywords: ["mutex", "mtx", "lock_guard", "counter"]
+      },
+      {
+        q: "vector<thread>로 worker 4개를 만들고, 모두 join 하는 코드를 작성하세요.",
+        hint: "vector, push_back, thread, for, join",
+        keywords: ["vector", "thread", "push_back", "join", "for"]
+      },
+      {
+        q: "결과를 포인터로 받는 worker(int* result)를 만들어, *result에 42를 저장하세요. main에서 호출하고 결과 출력까지.",
+        hint: "int*, &, *result",
+        keywords: ["worker", "int*", "result", "thread", "join"]
+      }
+    ]
+  }
+};
+
+// ============= 상태 =============
+
+let state = {
+  mode: 'map',
+  topic: null,
+  index: 0,
+  shuffledOrder: [],
+  shuffleKey: null,
+  total: 0,
+  correct: 0,
+  streak: 0,
+  selectedOption: null,
+  orderSelected: [],
+  answered: false
+};
+
+function getWeights() {
+  // 약점 데이터: { "mode|topic|qidx": { wrong: n, right: m } }
+  try {
+    return JSON.parse(localStorage.getItem('finn_weights_v1') || '{}');
+  } catch (e) { return {}; }
+}
+function saveWeight(qid, isCorrect) {
+  const w = getWeights();
+  if (!w[qid]) w[qid] = { wrong: 0, right: 0 };
+  if (isCorrect) w[qid].right++;
+  else w[qid].wrong++;
+  localStorage.setItem('finn_weights_v1', JSON.stringify(w));
+}
+function qid(idx) {
+  return state.mode + '|' + state.topic + '|' + idx;
+}
+
+function ensureShuffled() {
+  const questions = QUESTIONS[state.mode] && QUESTIONS[state.mode][state.topic];
+  if (!questions) return;
+  const key = state.mode + '|' + state.topic;
+  if (state.shuffleKey !== key || state.shuffledOrder.length !== questions.length) {
+    // 가중 셔플: 틀린 게 많은 문제일수록 더 자주, 한 번도 안 본 문제 우선
+    const w = getWeights();
+    const indices = questions.map((_, i) => i);
+
+    // 가중치 계산: 안 본 문제 = 우선순위 매우 높음, 틀린 비율 높을수록 우선
+    const weighted = indices.map(i => {
+      const stat = w[state.mode + '|' + state.topic + '|' + i];
+      if (!stat || (stat.right + stat.wrong) === 0) {
+        return { i, weight: 3.0 };       // 안 본 문제
+      }
+      const total = stat.right + stat.wrong;
+      const wrongRate = stat.wrong / total;
+      return { i, weight: 0.5 + wrongRate * 2 + (total < 3 ? 0.5 : 0) };
+    });
+
+    // 가중치 기반 셔플
+    state.shuffledOrder = weightedShuffle(weighted);
+    state.shuffleKey = key;
+    state.index = 0;
+  }
+}
+
+function weightedShuffle(items) {
+  const result = [];
+  const pool = items.slice();
+  while (pool.length > 0) {
+    const totalWeight = pool.reduce((s, x) => s + x.weight, 0);
+    let r = Math.random() * totalWeight;
+    let picked = 0;
+    for (let i = 0; i < pool.length; i++) {
+      r -= pool[i].weight;
+      if (r <= 0) { picked = i; break; }
+    }
+    result.push(pool[picked].i);
+    pool.splice(picked, 1);
+  }
+  return result;
+}
+
+function currentQuestion() {
+  const questions = QUESTIONS[state.mode][state.topic];
+  if (!questions) return null;
+  ensureShuffled();
+  const realIdx = state.shuffledOrder[state.index] ?? 0;
+  return questions[realIdx];
+}
+
+function loadProgress() {
+  const saved = localStorage.getItem('finn_and_study_v1');
+  if (saved) {
+    try {
+      const d = JSON.parse(saved);
+      state.correct = d.correct || 0;
+      state.total = d.total || 0;
+      state.streak = d.streak || 0;
+    } catch (e) {}
+  }
+}
+
+function saveProgress() {
+  localStorage.setItem('finn_and_study_v1', JSON.stringify({
+    correct: state.correct,
+    total: state.total,
+    streak: state.streak
+  }));
+}
+
+function resetProgress() {
+  if (confirm("진행 상황을 모두 초기화할까요?")) {
+    localStorage.removeItem('finn_and_study_v1');
+    state.correct = 0;
+    state.total = 0;
+    state.streak = 0;
+    updateScore();
+  }
+}
+
+function updateScore() {
+  document.getElementById('progressText').textContent = `${state.correct} / ${state.total}`;
+  const acc = state.total > 0 ? Math.round((state.correct / state.total) * 100) : 0;
+  document.getElementById('accuracy').textContent = state.total > 0 ? acc + '%' : '—';
+  document.getElementById('progressFill').style.width = acc + '%';
+  const streakEl = document.getElementById('streak');
+  document.getElementById('streakNum').textContent = state.streak;
+  if (state.streak >= 3) streakEl.classList.add('active');
+  else streakEl.classList.remove('active');
+}
+
+function renderTopicTabs() {
+  const source = state.mode === 'map' ? MAPS : QUESTIONS[state.mode];
+  const topics = Object.keys(source);
+  if (!state.topic || !topics.includes(state.topic)) state.topic = topics[0];
+  const html = topics.map(t =>
+    `<div class="topic-chip ${t === state.topic ? 'active' : ''}" data-topic="${escapeHtml(t)}">${escapeHtml(t)}</div>`
+  ).join('');
+  document.getElementById('topicTabs').innerHTML = html;
+  document.querySelectorAll('.topic-chip').forEach(el => {
+    el.onclick = () => {
+      state.topic = el.dataset.topic;
+      state.index = 0;
+      renderTopicTabs();
+      renderQuestion();
+    };
+  });
+}
+
+function getCurrentQuestions() {
+  return QUESTIONS[state.mode][state.topic] || [];
+}
+
+function renderMap() {
+  const map = MAPS[state.topic];
+  if (!map) {
+    document.getElementById('mainArea').innerHTML = '<div class="card"><div class="q-text" style="color:var(--text-muted);text-align:center;">맵을 찾을 수 없어요.</div></div>';
+    return;
+  }
+  const sectionsHtml = map.sections.map((sec, i) => `
+    <div class="section open" data-i="${i}">
+      <div class="section-head">
+        <div class="section-badge ${sec.kind}">${escapeHtml(sec.badge)}</div>
+        <div class="section-info">
+          <div class="section-label">${escapeHtml(sec.label)}</div>
+          <div class="section-sub">${escapeHtml(sec.sub)}</div>
+        </div>
+        <div class="section-toggle">›</div>
+      </div>
+      <div class="section-body">
+        <div class="section-code">${escapeHtml(sec.code)}</div>
+        ${sec.note ? `<div class="section-note">${sec.note}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  const html = `
+    <div class="card">
+      <div class="map-header">
+        <div class="map-title">${escapeHtml(state.topic)}</div>
+      </div>
+      <div class="map-desc">${escapeHtml(map.desc)}</div>
+      <div class="map-toolbar">
+        <button class="btn btn-ghost" onclick="mapToggleAll(true)">모두 펼치기</button>
+        <button class="btn btn-ghost" onclick="mapToggleAll(false)">모두 접기</button>
+      </div>
+      ${sectionsHtml}
+    </div>
+  `;
+  document.getElementById('mainArea').innerHTML = html;
+
+  document.querySelectorAll('.section-head').forEach(head => {
+    head.onclick = () => head.parentElement.classList.toggle('open');
+  });
+}
+
+function mapToggleAll(open) {
+  document.querySelectorAll('.section').forEach(s => {
+    if (open) s.classList.add('open');
+    else s.classList.remove('open');
+  });
+}
+
+function renderQuestion() {
+  if (state.mode === 'map') {
+    renderMap();
+    return;
+  }
+  const questions = getCurrentQuestions();
+  if (questions.length === 0) {
+    document.getElementById('mainArea').innerHTML = '<div class="card"><div class="q-text" style="text-align:center;color:var(--text-muted);">문제가 준비 중이에요.</div></div>';
+    return;
+  }
+  ensureShuffled();
+  if (state.index >= state.shuffledOrder.length) state.index = 0;
+  state.answered = false;
+  state.selectedOption = null;
+  state.orderSelected = [];
+
+  const q = currentQuestion();
+  const qNum = `${state.index + 1} / ${questions.length}`;
+  let html = '';
+
+  if (state.mode === 'fill') {
+    html = `
+      <div class="card">
+        <div class="q-label">Fill the blank · ${qNum}</div>
+        <div class="q-text">${escapeHtml(q.q)}</div>
+        <div class="code">${q.code.replace(/____+/g, '<span class="blank" id="blank">____</span>')}</div>
+        <div class="feedback" id="feedback"></div>
+        <div class="options" id="options">
+          ${q.options.map((opt, i) => `<div class="option" data-i="${i}">${escapeHtml(opt)}</div>`).join('')}
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" id="checkBtn" disabled>Check</button>
+          <button class="btn btn-primary" id="nextBtn" style="display:none">Next →</button>
+        </div>
+      </div>
+    `;
+  } else if (state.mode === 'order') {
+    const shuffled = [...q.lines].map((line, originalIdx) => ({ line, originalIdx }));
+    shuffle(shuffled);
+    html = `
+      <div class="card">
+        <div class="q-label">Arrange in order · ${qNum}</div>
+        <div class="q-text">${escapeHtml(q.q)}</div>
+        <div class="hint">아래 줄을 올바른 순서로 클릭하세요.</div>
+        <div class="lines" id="linesArea">
+          ${shuffled.map(item => `<div class="line" data-original="${item.originalIdx}"><span class="num">?</span><span>${escapeHtml(item.line)}</span></div>`).join('')}
+        </div>
+        <div class="line-divider">↓ Selected order</div>
+        <div class="answer-zone" id="answerArea"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="actions">
+          <button class="btn btn-ghost" onclick="resetOrder()">Reset</button>
+          <button class="btn btn-primary" id="checkBtn" disabled>Check</button>
+          <button class="btn btn-primary" id="nextBtn" style="display:none">Next →</button>
+        </div>
+      </div>
+    `;
+  } else if (state.mode === 'classify') {
+    html = `
+      <div class="card">
+        <div class="q-label">Classify pattern · ${qNum}</div>
+        <div class="q-text">이 코드는 어떤 패턴인가요?</div>
+        <div class="code">${escapeHtml(q.code)}</div>
+        <div class="feedback" id="feedback"></div>
+        <div class="options" id="options">
+          ${q.options.map((opt, i) => `<div class="option" data-i="${i}">${escapeHtml(opt)}</div>`).join('')}
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" id="checkBtn" disabled>Check</button>
+          <button class="btn btn-primary" id="nextBtn" style="display:none">Next →</button>
+        </div>
+      </div>
+    `;
+  } else if (state.mode === 'write') {
+    html = `
+      <div class="card">
+        <div class="q-label">Write from scratch · ${qNum}</div>
+        <div class="q-text">${escapeHtml(q.q)}</div>
+        <div class="hint"><b>힌트 키워드:</b> ${escapeHtml(q.hint)}</div>
+        <textarea class="textarea" id="writeInput" placeholder="// 여기에 코드를 작성하세요"></textarea>
+        <div class="feedback" id="feedback"></div>
+        <div class="actions">
+          <button class="btn btn-ghost" id="showAnswerBtn">예시 보기</button>
+          <button class="btn btn-primary" id="checkBtn">Submit</button>
+          <button class="btn btn-primary" id="nextBtn" style="display:none">Next →</button>
+        </div>
+      </div>
+    `;
+  }
+
+  document.getElementById('mainArea').innerHTML = html;
+  attachHandlers(q);
+}
+
+function attachHandlers(q) {
+  if (state.mode === 'fill' || state.mode === 'classify') {
+    document.querySelectorAll('.option').forEach(el => {
+      el.onclick = () => {
+        if (state.answered) return;
+        document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        state.selectedOption = el.dataset.i;
+        document.getElementById('checkBtn').disabled = false;
+      };
+    });
+    document.getElementById('checkBtn').onclick = () => checkAnswer(q);
+    document.getElementById('nextBtn').onclick = nextQuestion;
+  } else if (state.mode === 'order') {
+    document.querySelectorAll('.line').forEach(el => {
+      el.onclick = () => {
+        if (state.answered) return;
+        if (el.classList.contains('selected')) return;
+        const originalIdx = parseInt(el.dataset.original);
+        state.orderSelected.push(originalIdx);
+        el.classList.add('selected');
+        const num = el.querySelector('.num');
+        num.textContent = state.orderSelected.length;
+        const answerArea = document.getElementById('answerArea');
+        const clone = el.cloneNode(true);
+        clone.style.cursor = 'default';
+        clone.onclick = null;
+        answerArea.appendChild(clone);
+        if (state.orderSelected.length === q.lines.length) {
+          document.getElementById('checkBtn').disabled = false;
+        }
+      };
+    });
+    document.getElementById('checkBtn').onclick = () => checkOrder(q);
+    document.getElementById('nextBtn').onclick = nextQuestion;
+  } else if (state.mode === 'write') {
+    document.getElementById('checkBtn').onclick = () => checkWrite(q);
+    document.getElementById('nextBtn').onclick = nextQuestion;
+    document.getElementById('showAnswerBtn').onclick = () => showExampleAnswer(q);
+  }
+}
+
+function resetOrder() {
+  state.orderSelected = [];
+  document.querySelectorAll('.line').forEach(el => {
+    el.classList.remove('selected');
+    el.querySelector('.num').textContent = '?';
+  });
+  document.getElementById('answerArea').innerHTML = '';
+  document.getElementById('checkBtn').disabled = true;
+}
+
+function checkAnswer(q) {
+  if (state.selectedOption === null) return;
+  const selectedText = q.options[parseInt(state.selectedOption)];
+  const isCorrect = selectedText === q.answer;
+  state.answered = true;
+  state.total++;
+
+  document.querySelectorAll('.option').forEach(el => {
+    const optText = q.options[parseInt(el.dataset.i)];
+    if (optText === q.answer) el.classList.add('correct');
+    if (el.classList.contains('selected') && optText !== q.answer) el.classList.add('wrong');
+    el.style.pointerEvents = 'none';
+  });
+
+  const blank = document.getElementById('blank');
+  if (blank) {
+    blank.textContent = q.answer;
+    blank.classList.add(isCorrect ? 'filled' : 'wrong');
+  }
+
+  showFeedback(isCorrect, q);
+  if (isCorrect) {
+    state.correct++;
+    state.streak++;
+  } else {
+    state.streak = 0;
+  }
+  saveWeight(qid(state.shuffledOrder[state.index]), isCorrect);
+  saveProgress();
+  updateScore();
+
+  document.getElementById('checkBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+function checkOrder(q) {
+  const correct = q.lines.every((_, i) => state.orderSelected[i] === i);
+  state.answered = true;
+  state.total++;
+  if (correct) { state.correct++; state.streak++; } else { state.streak = 0; }
+  saveProgress();
+  updateScore();
+  showFeedback(correct, { hint: correct ? "완벽한 흐름!" : "아래에서 정답 순서 확인하세요." });
+  if (!correct) {
+    const html = '<div style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">정답</div>' +
+      q.lines.map(line => `<div class="line" style="background:var(--success-dim);border-color:var(--success);color:var(--success);cursor:default;"><span>${escapeHtml(line)}</span></div>`).join('');
+    document.getElementById('answerArea').innerHTML = html;
+  }
+  document.getElementById('checkBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+function checkWrite(q) {
+  const text = document.getElementById('writeInput').value;
+  const missing = q.keywords.filter(k => !text.includes(k));
+  const isCorrect = missing.length === 0;
+  state.answered = true;
+  state.total++;
+  if (isCorrect) { state.correct++; state.streak++; } else { state.streak = 0; }
+  saveProgress();
+  updateScore();
+  if (isCorrect) {
+    showFeedback(true, { hint: "필수 키워드 모두 포함! 정확한 동작은 직접 컴파일로 확인하세요." });
+  } else {
+    showFeedback(false, { hint: "빠진 키워드: " + missing.join(", ") });
+  }
+  document.getElementById('checkBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+function showExampleAnswer(q) {
+  alert("예시 답:\n\n" + getExampleAnswer(q));
+}
+
+function getExampleAnswer(q) {
+  const examples = {
+    "스레드 t1을 만들어 worker() 함수를 실행시키고, 끝날 때까지 기다리세요.":
+`thread t1(worker);
+t1.join();`,
+    "전역 mutex mtx를 선언하고, lock_guard로 보호된 채로 counter++를 수행하는 worker(int& counter)를 작성하세요.":
+`mutex mtx;
+
+void worker(int& counter) {
+    lock_guard<mutex> lock(mtx);
+    counter++;
+}`,
+    "vector<thread>로 worker 4개를 만들고, 모두 join 하는 코드를 작성하세요.":
+`vector<thread> workers;
+for (int i = 0; i < 4; i++) {
+    workers.push_back(thread(worker));
+}
+for (int i = 0; i < 4; i++) {
+    workers[i].join();
+}`,
+    "결과를 포인터로 받는 worker(int* result)를 만들어, *result에 42를 저장하세요. main에서 호출하고 결과 출력까지.":
+`void worker(int* result) {
+    *result = 42;
+}
+
+int main() {
+    int answer;
+    thread t(worker, &answer);
+    t.join();
+    cout << answer;
+}`
+  };
+  return examples[q.q] || "예시 답이 등록되어 있지 않아요.";
+}
+
+function showFeedback(correct, q) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
+  fb.innerHTML = correct
+    ? `<b>✓ Correct</b>${q.hint ? '<small>' + escapeHtml(q.hint) + '</small>' : ''}`
+    : `<b>✗ Not quite</b>${q.answer ? '<small>정답: <b>' + escapeHtml(q.answer) + '</b></small>' : ''}${q.hint ? '<small>' + escapeHtml(q.hint) + '</small>' : ''}`;
+}
+
+function nextQuestion() {
+  const questions = getCurrentQuestions();
+  state.index++;
+  if (state.index >= questions.length) {
+    // 한 바퀴 다 돌면 다시 셔플
+    state.shuffleKey = null;
+    ensureShuffled();
+  }
+  renderQuestion();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ============= 초기화 =============
+
+function toggleStatsForMode() {
+  const stats = document.getElementById('statsBlock');
+  if (stats) stats.style.display = (state.mode === 'map') ? 'none' : 'block';
+}
+
+document.querySelectorAll('.mode-tab').forEach(el => {
+  el.onclick = () => {
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    state.mode = el.dataset.mode;
+    state.topic = null;
+    state.index = 0;
+    toggleStatsForMode();
+    renderTopicTabs();
+    renderQuestion();
+  };
+});
+
+loadProgress();
+updateScore();
+toggleStatsForMode();
+renderTopicTabs();
+renderQuestion();
+</script>
+</body>
+</html>
